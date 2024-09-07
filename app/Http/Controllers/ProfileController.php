@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Admin;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -16,14 +18,38 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        if($request->is('admin/*')){
+            return view('profile.edit',[
+                'user' => auth()->guard('admin')->user(),
+            ]);
+        }else{
+            return view('profile.edit', [
+                'user' => $request->user(),
+            ]);
+
+        }
     }
 
     /**
      * Update the user's profile information.
      */
+    
+     public function updateAdmin(Request $request) : RedirectResponse{
+        $validate = Validator::make ($request->all(),[
+            'name' => ['required', 'max: 255'],
+            'email' => ['required|email','lowercase', 'email', 'unique:'.Admin::class]
+        ]);
+        $authenticated = Auth::guard('admin')->user();
+        $update = Admin::where('id', $authenticated->id)->update([
+            'name' => $request->name,
+            'email' => $request->email
+        ]);
+        if($update){
+            return redirect()->route('admin.profile.edit')->with('status', 'Profile updated successfully');
+        }else{
+            return redirect()->route('admin.profile.edit')->with('error', 'Profile update failed');
+        }
+     }
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
