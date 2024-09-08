@@ -21,9 +21,9 @@ class AuthenticatedSessionController extends Controller
     }
 
     // public function getUser(Request $request){
-    //     $id = substr($request->token, -1);
-    //         $user = User::where('id', $id)->first();
-    //       if($request->token === $user->token){
+    //     // $id = substr($request->token, -1);
+    //         $user = User::where('id', $request->id)->first();
+    //       if($request->id){
     //         return response()->json([
     //           'status' => true,
     //           'admin' => $user
@@ -42,20 +42,18 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
-    
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            
+            $user = Auth::user();
             return response()->json([
-                'status' => true,
-                'user' => Auth::user(),
+              'status' => true,
+              'admin' => $user
             ]);
-        }
-    
-        return response()->json([
-            'status' => false,
-            'error' => 'The provided credentials do not match our records.',
-        ]);
+          } else {
+            return response()->json([
+              'status' => false,
+              'message' => 'Invalid credentials'
+            ]);
+          }
     }
 
     /**
@@ -63,18 +61,18 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
+        // Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
+        // $request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+        // $request->session()->regenerateToken();
 
         // return redirect('/');
            // Optionally return success message
-           return response()->json([
-            'status' => true,
-            'message' => 'User logged out successfully.',
-        ]);
+        //    return response()->json([
+        //     'status' => true,
+        //     'message' => 'User logged out successfully.',
+        // ]);
      
     }
 }
