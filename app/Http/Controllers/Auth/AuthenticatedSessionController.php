@@ -20,40 +20,46 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login');
     }
 
-    // public function getUser(Request $request){
-    //     // $id = substr($request->token, -1);
-    //         $user = User::where('id', $request->id)->first();
-    //       if($request->id){
-    //         return response()->json([
-    //           'status' => true,
-    //           'admin' => $user
-    //         ]);
-    //       } else{
-    //         return response()->json([
-    //           'status' => false,
-    //           'message' => 'Please login again'
-    //         ]);
-    //       }
-        
-    //   }
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request)
-    {
-        $credentials = $request->only('email', 'password');
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
+    public function getUser(Request $request){
+        $id = substr($request->token, -1);
+            $user = User::where('id', $id)->first();
+          if($request->token === $user->token){
             return response()->json([
               'status' => true,
               'admin' => $user
             ]);
-          } else {
+          } else{
             return response()->json([
               'status' => false,
-              'message' => 'Invalid credentials'
+              'message' => 'Please login again'
             ]);
           }
+        
+      }
+    /**
+     * Handle an incoming authentication request.
+     */
+    public function store(LoginRequest $request)
+   
+    {
+        $credentials = $request ->only('email','password');
+        if(Auth::attempt($credentials)) {
+          $user = Auth::user();
+          $token = time().$user->id;
+          User::where('email', $user->email)->update([
+            'token' => $token
+          ]);
+          return response()->json([
+            'status' => true,
+            'token' => $token,
+            
+          ]);
+        } else {
+          return response()->json([
+            'status' => false,
+            'error' => 'The provided credentials do not match our records.',
+          ]);
+        }
     }
 
     /**
