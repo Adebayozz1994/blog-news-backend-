@@ -26,7 +26,7 @@ class AuthenticatedSessionController extends Controller
           if($request->token === $user->token){
             return response()->json([
               'status' => true,
-              'admin' => $user
+              'user' => $user
             ]);
           } else{
             return response()->json([
@@ -74,11 +74,9 @@ class AuthenticatedSessionController extends Controller
         // $request->session()->regenerateToken();
 
         // return redirect('/');
-           // Optionally return success message
-        //    return response()->json([
-        //     'status' => true,
-        //     'message' => 'User logged out successfully.',
-        // ]);
-     
+        $id = substr($request->token, -1);
+        User::where('id',$id)->update([
+           'token' => time().$id
+        ]);
     }
 }
