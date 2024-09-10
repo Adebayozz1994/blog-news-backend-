@@ -56,11 +56,11 @@ class RegisteredAdminController extends Controller
         }
        
 
-        // event(new Registered($admin));
+        event(new Registered($admin));
 
-        // Auth::login($admin);
+        Auth::login($admin);
 
-        // return redirect('/admin/dashboard');
+        return redirect('/admin/dashboard');
 
     }
 }
