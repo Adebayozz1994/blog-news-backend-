@@ -28,6 +28,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Login successful',
+                'user' => Auth::user(), 
+            ], 200);
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
