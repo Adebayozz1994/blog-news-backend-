@@ -27,12 +27,12 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-
+        
         if ($request->expectsJson()) {
             return response()->json([
                 'status' => true,
                 'message' => 'Login successful',
-                'user' => Auth::user(), 
+                'user' => Auth::user(), // Return user data if needed
             ], 200);
         }
 

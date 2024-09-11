@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\CheckGuest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,6 +28,20 @@ Route::prefix('admin')->middleware(CheckGuest::class)->group(function () {
     Route::patch('/profile', [ProfileController::class, 'updateAdmin'])->name('admin.profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('admin.profile.destroy');
 });
+// Route::get('show_session_data', function (){ 
+//     dd(session()->all());
+// });
+
+// Route::get('store_session_data', function (Request $request){ 
+//     // $request->session()->put('username', 'adebayozz');
+//     session([
+//         'username' => 'adebayozz',
+//         'email' => 'adebayozz@gmail.com'
+//     ]);
+// });
+
+
+
 
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
