@@ -20,7 +20,7 @@ Route::prefix('admin')->group(function () {
     Route::post('register', [RegisteredAdminController::class, 'store']);
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
-                ->name('admin.login');
+                ->name('admin.login')->middleware(CheckAdminISHeadAdmin::class);
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
@@ -37,6 +37,7 @@ Route::prefix('admin')->group(function () {
                 ->name('password.store');
     Route::post('get', [AuthenticatedSessionController::class, 'getAdmin']);
 });
+Route::post('/admin/getAdmin', [AuthenticatedSessionController::class, 'getAdmin']);
 
 Route::prefix('admin')->group(function () {
     Route::get('verify-email', EmailVerificationPromptController::class)

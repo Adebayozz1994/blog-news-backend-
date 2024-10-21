@@ -28,13 +28,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
         
-        if ($request->expectsJson()) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Login successful',
-                'user' => Auth::user(), // Return user data if needed
-            ], 200);
-        }
+        // if ($request->expectsJson()) {
+        //     return response()->json([
+        //         'status' => true,
+        //         'message' => 'Login successful',
+        //         'user' => Auth::user(), // Return user data if needed
+        //     ], 200);
+        // }
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

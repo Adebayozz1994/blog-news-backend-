@@ -52,17 +52,18 @@ class AuthenticatedSessionController extends Controller
         Admin::where('email', $admin->email)->update([
           'token' => $token
         ]);
-        return redirect('/admin/dashboard');
-    //     return response()->json([
-    //       'status' => true,
-    //       'token' => $token,
+        // return redirect('/admin/dashboard');
+        return response()->json([
+          'status' => true,
+          'token' => $token,
+          'role' => $admin->role,
           
-    //     ]);
-    //   } else {
-    //     return response()->json([
-    //       'status' => false,
-    //       'error' => 'The provided credentials do not match our records.',
-    //     ]);
+        ]);
+      } else {
+        return response()->json([
+          'status' => false,
+          'error' => 'The provided credentials do not match our records.',
+        ]);
       }
     }
 
