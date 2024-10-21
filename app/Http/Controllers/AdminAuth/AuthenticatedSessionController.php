@@ -78,7 +78,7 @@ class AuthenticatedSessionController extends Controller
 
         // $request->session()->regenerateToken();
 
-        return redirect('/admin/login');
+        // return redirect('/admin/login');
         $id = substr($request->token, -1);
          Admin::where('id',$id)->update([
             'token' => time().$id

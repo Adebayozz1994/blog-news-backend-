@@ -15,15 +15,15 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie','admin/*'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie', '/login', '/logout', '/dashboard'], // Specify the paths
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['*'], // Allow all methods (GET, POST, PUT, DELETE, etc.)
 
-    'allowed_origins' => ['http://localhost:3000'],
+    'allowed_origins' => ['http://localhost:3000'], // Allow your frontend's origin
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => ['*'], // Allow all headers
 
     'exposed_headers' => [],
 
