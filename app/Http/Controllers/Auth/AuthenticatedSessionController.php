@@ -25,23 +25,28 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): JsonResponse
     {
-        $request->authenticate();
-
-        $request->session()->regenerate();
-        
-        $user = Auth::user();
-
-        // Ensure the request expects JSON
-        if ($request->expectsJson()) {
+        try {
+            // Attempt to authenticate the user
+            $request->authenticate();
+    
+            // Regenerate session to prevent session fixation
+            $request->session()->regenerate();
+    
+            // Return a success response with the authenticated user
             return response()->json([
                 'status' => true,
                 'message' => 'Login successful',
-                'user' => [
-                    'name' => $user->name,
-                    'email' => $user->email,
-                ],
+                'user' => Auth::user(),
             ], 200);
-        }
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Login failed',
+                'errors' => $e->errors(),
+            ], 422); 
+    
+        } 
 
         // return redirect()->intended(route('dashboard', absolute: false));
     }
